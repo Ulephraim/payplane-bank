@@ -1,4 +1,8 @@
-/* eslint-disable no-unused-vars */
+/**
+ * eslint-disable no-unused-vars
+ *
+ * @format
+ */
 
 declare type SearchParamProps = {
   params: { [key: string]: string };
@@ -92,13 +96,13 @@ declare type Bank = {
 };
 
 declare type AccountTypes =
-  | "depository"
-  | "credit"
-  | "loan "
-  | "investment"
-  | "other";
+  | 'depository'
+  | 'credit'
+  | 'loan '
+  | 'investment'
+  | 'other';
 
-declare type Category = "Food and Drink" | "Travel" | "Transfer";
+declare type Category = 'Food and Drink' | 'Travel' | 'Transfer';
 
 declare type CategoryCount = {
   name: string;
@@ -145,11 +149,11 @@ declare interface CreditCardProps {
 declare interface BankInfoProps {
   account: Account;
   appwriteItemId?: string;
-  type: "full" | "card";
+  type: 'full' | 'card';
 }
 
 declare interface HeaderBoxProps {
-  type?: "title" | "greeting";
+  type?: 'title' | 'greeting';
   title: string;
   subtext: string;
   user?: string;
@@ -174,7 +178,7 @@ declare interface PaginationProps {
 
 declare interface PlaidLinkProps {
   user: User;
-  variant?: "primary" | "ghost";
+  variant?: 'primary' | 'ghost';
   dwollaCustomerId?: string;
 }
 
@@ -188,7 +192,7 @@ declare interface PlaidLinkProps {
 // };
 
 declare interface AuthFormProps {
-  type: "sign-in" | "sign-up";
+  type: 'sign-in' | 'sign-up';
 }
 
 declare interface BankDropdownProps {
@@ -202,7 +206,7 @@ declare interface BankTabItemProps {
   appwriteItemId?: string;
 }
 
-declare interface TotlaBalanceBoxProps {
+declare interface TotalBalanceBoxProps {
   accounts: Account[];
   totalBanks: number;
   totalCurrentBalance: number;
