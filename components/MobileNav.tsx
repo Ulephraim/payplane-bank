@@ -8,7 +8,6 @@ import {
   SheetTrigger,
   SheetContent,
   SheetClose,
-  SheetHeader,
 } from '@/components/ui/sheet';
 import { sidebarLinks } from '@/constants';
 import { cn } from '@/lib/utils';
