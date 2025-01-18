@@ -21,16 +21,23 @@ const AuthForm = ({ type }: { type: string }) => {
   const router = useRouter();
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  // const loggedInUser = getLoggedInUser();
 
   const formSchema = authFormSchema(type);
 
-  // 1. Define your form.
+  // 1. Define your form with all defaultValues set to empty strings to avoid undefined.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       email: '',
       password: '',
+      firstName: '', // Ensure all fields have default values
+      lastName: '',
+      address1: '',
+      city: '',
+      state: '',
+      postalCode: '',
+      dateOfBirth: '',
+      ssn: '',
     },
   });
 
@@ -133,7 +140,7 @@ const AuthForm = ({ type }: { type: string }) => {
                   <CustomInput
                     control={form.control}
                     name="city"
-                    label="city"
+                    label="City"
                     placeholder="Enter your city"
                   />
 

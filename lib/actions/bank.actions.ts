@@ -2,14 +2,7 @@
 
 'use server';
 
-import {
-  ACHClass,
-  CountryCode,
-  TransferAuthorizationCreateRequest,
-  TransferCreateRequest,
-  TransferNetwork,
-  TransferType,
-} from 'plaid';
+import { CountryCode } from 'plaid';
 
 import { plaidClient } from '../plaid';
 import { parseStringify } from '../utils';
@@ -23,8 +16,18 @@ export const getAccounts = async ({ userId }: getAccountsProps) => {
     // get banks from db
     const banks = await getBanks({ userId });
 
+    // Ensure banks is always an array (if it's undefined or null, it will default to an empty array)
+    if (!Array.isArray(banks)) {
+      console.error("Expected 'banks' to be an array, but got:", banks);
+      return parseStringify({
+        data: [],
+        totalBanks: 0,
+        totalCurrentBalance: 0,
+      });
+    }
+
     const accounts = await Promise.all(
-      banks?.map(async (bank: Bank) => {
+      banks.map(async (bank: Bank) => {
         // get each account info from plaid
         const accountsResponse = await plaidClient.accountsGet({
           access_token: bank.accessToken,
@@ -47,7 +50,7 @@ export const getAccounts = async ({ userId }: getAccountsProps) => {
           type: accountData.type as string,
           subtype: accountData.subtype! as string,
           appwriteItemId: bank.$id,
-          sharaebleId: bank.shareableId,
+          shareableId: bank.shareableId,
         };
 
         return account;
@@ -116,10 +119,10 @@ export const getAccount = async ({ appwriteItemId }: getAccountProps) => {
       appwriteItemId: bank.$id,
     };
 
-    // sort transactions by date such that the most recent transaction is first
-    const allTransactions = [...transactions, ...transferTransactions].sort(
-      (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
-    );
+    const allTransactions = [
+      ...(Array.isArray(transactions) ? transactions : []),
+      ...(Array.isArray(transferTransactions) ? transferTransactions : []),
+    ].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
     return parseStringify({
       data: account,
@@ -148,7 +151,6 @@ export const getInstitution = async ({
   }
 };
 
-// Get transactions
 export const getTransactions = async ({
   accessToken,
 }: getTransactionsProps) => {
@@ -182,6 +184,16 @@ export const getTransactions = async ({
 
     return parseStringify(transactions);
   } catch (error) {
-    console.error('An error occurred while getting the accounts:', error);
+    // Enhanced error logging
+    if (error.response) {
+      console.error('Error Response:', error.response.data);
+      console.error('Error Status:', error.response.status);
+      console.error('Error Headers:', error.response.headers);
+    } else if (error.request) {
+      console.error('Error Request:', error.request);
+    } else {
+      console.error('Error Message:', error.message);
+    }
+    console.error('An error occurred while getting the transactions:', error);
   }
 };
